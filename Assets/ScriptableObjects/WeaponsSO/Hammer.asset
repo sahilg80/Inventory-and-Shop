@@ -19,4 +19,5 @@ MonoBehaviour:
   SellPrice: 160
   Type: 0
   Weight: 12
+  TotalQuantity: 6
   Rarity: 3

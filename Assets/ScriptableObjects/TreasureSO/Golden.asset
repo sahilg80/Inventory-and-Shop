@@ -17,6 +17,7 @@ MonoBehaviour:
   Icon: {fileID: 21300000, guid: ad9b2b04e81d91f4faa373359c5eb26f, type: 3}
   BuyPrice: 160
   SellPrice: 175
-  Type: 0
+  Type: 3
   Weight: 16
+  TotalQuantity: 6
   Rarity: 3

@@ -62,6 +62,42 @@ namespace Assets.Scripts.Utilities
             return obj;
         }
 
+        public T SpawnObject<T>(Component component)
+        {
+            ObjectPoolsInfo pool = null;
+            foreach (var p in objectPools)
+            {
+                if (p.Name == component.tag)
+                {
+                    pool = p;
+                    break;
+                }
+            }
+            if (pool == null)
+            {
+                pool = new ObjectPoolsInfo();
+                pool.Name = component.tag;
+                pool.InactiveObjects = new List<GameObject>();
+                objectPools.Add(pool);
+            }
+
+            GameObject obj = null;
+
+            if (pool.InactiveObjects.Count > 0)
+            {
+                obj = pool.InactiveObjects[0];
+                obj.SetActive(true);
+                pool.InactiveObjects.RemoveAt(0);
+            }
+            else
+            {
+                obj = GameObject.Instantiate(component.gameObject);
+                obj.transform.position = Vector3.zero;
+                obj.transform.rotation = Quaternion.identity;
+            }
+            return obj.GetComponent<T>();
+        }
+
         public void DeSpawnObject(GameObject objectToDespawn)
         {
             ObjectPoolsInfo pool = null;

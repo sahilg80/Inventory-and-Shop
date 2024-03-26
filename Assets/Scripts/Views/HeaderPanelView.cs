@@ -8,11 +8,6 @@ namespace Assets.Scripts.Views
 {
     public class HeaderPanelView : MonoBehaviour
     {
-        private const float maximumWeight = 100f;
-        [SerializeField]
-        private TextMeshProUGUI playerMoneyText;
-        [SerializeField]
-        private TextMeshProUGUI playerInventoryWeight;
         // Start is called before the first frame update
         void Start()
         {
@@ -20,16 +15,16 @@ namespace Assets.Scripts.Views
         }
 
         // call on invoking event
-        private void UpdatePlayerMoneyText(float money)
-        {
-            playerMoneyText.SetText(money.ToString());
-        }
+        //private void UpdatePlayerMoneyText(float money)
+        //{
+        //    playerMoneyText.SetText(money.ToString());
+        //}
 
-        // call on invoking event
-        private void UpdatePlayerWeight(float weight)
-        {
-            playerInventoryWeight.SetText(weight.ToString() + "/" + maximumWeight.ToString());
-        }
+        //// call on invoking event
+        //private void UpdatePlayerWeight(float weight)
+        //{
+        //    playerInventoryWeight.SetText(weight.ToString() + "/" + maximumWeight.ToString());
+        //}
 
         public void OnSelectItemType(ItemTypesScriptableObjects itemTypeSO)
         {
