@@ -22,11 +22,13 @@ namespace Assets.Scripts.Controllers
             playerView.SetMaximumWeight(playerModel.MaximumWeight);
             playerView.UpdatePlayerData(playerModel.CurrentOccupiedMoney, startingOccupiedWeight);
             EventService.Instance.OnBuySelectedItem.AddListener(OnBuySelectedItem);
+            EventService.Instance.OnSoldSelectedItem.AddListener(OnSoldSelectedItem);
         }
 
         ~PlayerController()
         {
             EventService.Instance.OnBuySelectedItem.RemoveListener(OnBuySelectedItem);
+            EventService.Instance.OnSoldSelectedItem.RemoveListener(OnSoldSelectedItem);
         }
 
         private void OnBuySelectedItem(TradeDetail detail)
@@ -34,6 +36,15 @@ namespace Assets.Scripts.Controllers
             float amount = playerModel.CurrentOccupiedMoney - detail.TradedAmount;
             playerModel.UpdateOccupiedMoney(amount);
             float weight = playerModel.CurrentOccupiedWeight + detail.TradedWeight;
+            playerModel.UpdateOccupiedWeight(weight);
+            playerView.UpdatePlayerData(amount, weight);
+        }
+
+        private void OnSoldSelectedItem(TradeDetail detail)
+        {
+            float amount = playerModel.CurrentOccupiedMoney + detail.TradedAmount;
+            playerModel.UpdateOccupiedMoney(amount);
+            float weight = playerModel.CurrentOccupiedWeight - detail.TradedWeight;
             playerModel.UpdateOccupiedWeight(weight);
             playerView.UpdatePlayerData(amount, weight);
         }

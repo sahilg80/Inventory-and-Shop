@@ -34,10 +34,13 @@ namespace Assets.Scripts.Views
         private GameObject buyItemButton;
         [SerializeField]
         private GameObject sellItemButton;
+        [SerializeField]
+        private GameObject confirmationPanel;
 
         private int currentSelectedQuantity;
         private int remainingQuanity;
         private ItemDetail selectedItemDetails;
+        private Action actionToExecuteOnConfirmYes;
         private const string NotValidAmountText = "Amount insufficient";
         private const string NotValidWeightText = "Weight insufficient";
 
@@ -94,6 +97,18 @@ namespace Assets.Scripts.Views
             itemQuantityText.SetText(quantity.ToString());
         }
 
+        public void OnClickYesButton()
+        {
+            actionToExecuteOnConfirmYes?.Invoke();
+            confirmationPanel.SetActive(false);
+        }
+
+        public void OnClickNoButton()
+        {
+            actionToExecuteOnConfirmYes = null;
+            confirmationPanel.SetActive(false);
+        }
+
         public void OnClickIncreaseQuantity()
         {
             if (remainingQuanity <= currentSelectedQuantity) return;
@@ -112,49 +127,54 @@ namespace Assets.Scripts.Views
 
         public void OnClickBuyButton()
         {
-            bool isValid = IsTradeValid(selectedItemDetails.ItemData.Weight, selectedItemDetails.ItemData.BuyPrice);
+            bool isValid = IsThisTradeValid(selectedItemDetails.ItemData.Weight, selectedItemDetails.ItemData.BuyPrice);
             if (!isValid) return;
-            
-            TradeDetail itemBoughtDetail = new TradeDetail()
-            {
-                ItemData = selectedItemDetails.ItemData,
-                QuantityTraded = currentSelectedQuantity,
-                TradedAmount = currentSelectedQuantity * selectedItemDetails.ItemData.BuyPrice,
-                TradedWeight = currentSelectedQuantity * selectedItemDetails.ItemData.Weight,
-                RemainingQuantity = selectedItemDetails.QuantityAvaiableInCurrentTradeType - currentSelectedQuantity,
-            };
-            
-            //selectedItemDetails.QuantityAvaiableInCurrentTradeType = itemBoughtDetail.RemainingQuantity;
-            //selectedItemDetails.ItemCellView.SetQuantity(selectedItemDetails.QuantityAvaiableInCurrentTradeType);
-            
-            EventService.Instance.OnBuySelectedItem.InvokeEvent(itemBoughtDetail);
 
-            ShowSelectedItemDetailPanel(false);
-            ResetProperties();
+            confirmationPanel.SetActive(true);
+            actionToExecuteOnConfirmYes = () =>
+            {
+
+                TradeDetail itemBoughtDetail = new TradeDetail()
+                {
+                    ItemData = selectedItemDetails.ItemData,
+                    QuantityTraded = currentSelectedQuantity,
+                    TradedAmount = currentSelectedQuantity * selectedItemDetails.ItemData.BuyPrice,
+                    TradedWeight = currentSelectedQuantity * selectedItemDetails.ItemData.Weight,
+                    RemainingQuantity = selectedItemDetails.QuantityAvaiableInCurrentTradeType - currentSelectedQuantity,
+                };
+
+                EventService.Instance.OnBuySelectedItem.InvokeEvent(itemBoughtDetail);
+
+                ShowSelectedItemDetailPanel(false);
+                ResetProperties();
+            };
         }
 
         public void OnClickSellButton()
-        {   
-            TradeDetail itemSoldDetail = new TradeDetail()
+        {
+            confirmationPanel.SetActive(true);
+            actionToExecuteOnConfirmYes = () =>
             {
-                ItemData = selectedItemDetails.ItemData,
-                QuantityTraded = currentSelectedQuantity,
-                TradedAmount = currentSelectedQuantity * selectedItemDetails.ItemData.SellPrice,
-                TradedWeight = currentSelectedQuantity * selectedItemDetails.ItemData.Weight,
-                RemainingQuantity = selectedItemDetails.QuantityAvaiableInCurrentTradeType - currentSelectedQuantity,
+                TradeDetail itemSoldDetail = new TradeDetail()
+                {
+                    ItemData = selectedItemDetails.ItemData,
+                    QuantityTraded = currentSelectedQuantity,
+                    TradedAmount = currentSelectedQuantity * selectedItemDetails.ItemData.SellPrice,
+                    TradedWeight = currentSelectedQuantity * selectedItemDetails.ItemData.Weight,
+                    RemainingQuantity = selectedItemDetails.QuantityAvaiableInCurrentTradeType - currentSelectedQuantity,
+                };
+
+                EventService.Instance.OnSoldSelectedItem.InvokeEvent(itemSoldDetail);
+
+                ShowSelectedItemDetailPanel(false);
+                ResetProperties();
             };
-
-            //selectedItemDetails.QuantityAvaiableInCurrentTradeType = selectedItemDetails.QuantityAvaiableInCurrentTradeType - currentSelectedQuantity;
-            //selectedItemDetails.ItemCellView.SetQuantity(selectedItemDetails.QuantityAvaiableInCurrentTradeType);
-
-            EventService.Instance.OnSoldSelectedItem.InvokeEvent(itemSoldDetail);
-
-            ShowSelectedItemDetailPanel(false);
-            ResetProperties();
         }
 
-        private bool IsTradeValid(float eachItemWeight, float eachItemPrice)
+        private bool IsThisTradeValid(float eachItemWeight, float eachItemPrice)
         {
+            if (currentSelectedQuantity == 0) return false;
+
             bool value = GameService.Instance.GetPlayerController().ValidateAmount(currentSelectedQuantity, eachItemPrice);
 
             if (!value)

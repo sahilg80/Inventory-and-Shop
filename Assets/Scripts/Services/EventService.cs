@@ -28,6 +28,8 @@ namespace Assets.Scripts.Services
         public EventController<TradeDetail> OnBuySelectedItem { get; private set; }
         public EventController<TradeDetail> OnSoldSelectedItem { get; private set; }
         public EventController<string> OnShowTradeStatus { get; private set; }
+        public EventController<ItemType> OnSelectGivenCategory { get; private set; }
+
         private EventService()
         {
             OnSelectInventory = new EventController();
@@ -36,6 +38,7 @@ namespace Assets.Scripts.Services
             OnBuySelectedItem = new EventController<TradeDetail>();
             OnSoldSelectedItem = new EventController<TradeDetail>();
             OnShowTradeStatus = new EventController<string>();
+            OnSelectGivenCategory = new EventController<ItemType>();
         }
     }
 }

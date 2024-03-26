@@ -28,12 +28,18 @@ namespace Assets.Scripts.Views
             playerInventoryController = controller;
         }
 
-        public void ShowItemsOfSelectedType(List<ItemCellView> itemsList)
+        //public void ShowItemsOfSelectedType(List<ItemCellView> itemsList)
+        //{
+        //    foreach(ItemCellView item in itemsList)
+        //    {
+        //        AddItem(item);
+        //    }
+        //}
+
+        public void AddItem(ItemCellView itemView)
         {
-            foreach(ItemCellView item in itemsList)
-            {
-                AddItem(item);
-            }
+            itemView.transform.parent = itemsListContainer;
+            itemView.transform.localScale = Vector3.one;
         }
 
         //public void ClearItemsListFromUI()
@@ -48,10 +54,6 @@ namespace Assets.Scripts.Views
         //    playerInventoryController.OnSelectInventory();
         //}
 
-        private void AddItem(ItemCellView itemView)
-        {
-            itemView.transform.parent = this.transform;
-        }
 
         private void OnDisable()
         {

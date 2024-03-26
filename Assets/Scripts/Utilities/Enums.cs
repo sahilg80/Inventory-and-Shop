@@ -11,6 +11,7 @@ namespace Assets.Scripts.Utilities
         Material,
         Consumable,
         Treasue,
+        All,
     }
 
     public enum RarityType
