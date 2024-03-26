@@ -25,13 +25,13 @@ namespace Assets.Scripts.Controllers
             shopModel = new ShopModel(this);
             this.itemCellViewPrefab = itemCellView;
             EventService.Instance.OnSelectShop.AddListener(OnSelectShopPanel);
-            EventService.Instance.OnBuySelectedItem.AddListener(OnBuySelectedItem);
+            EventService.Instance.OnBuySelectedItem.AddListener(ValidateTradedItemRemainingQuantity);
         }
 
         ~ShopController()
         {
             EventService.Instance.OnSelectShop.RemoveListener(OnSelectShopPanel);
-            EventService.Instance.OnBuySelectedItem.RemoveListener(OnBuySelectedItem);
+            EventService.Instance.OnBuySelectedItem.RemoveListener(ValidateTradedItemRemainingQuantity);
         }
 
         private void OnSelectShopPanel()
@@ -41,27 +41,44 @@ namespace Assets.Scripts.Controllers
             SetItemsListFromShop();
         }
 
-        private void OnBuySelectedItem(ItemDetail itemBought, TradeType type)
+        private void ValidateTradedItemRemainingQuantity(TradeDetail itemBought)
         {
-            if (type != TradeType.Buy) return;
-            Debug.Log("buying this item ");
-            // update in player inventory with item
+            ItemDetail item = shopModel.GetItemFromShopByID(itemBought.ItemData.ID);
+            if (item == null) 
+            {
+                Debug.LogError("item not exist");
+                return;
+            }
+
+            if (itemBought.RemainingQuantity <= 0)
+            {
+                item.ItemCellView.UnParentThisObject();
+                ObjectPoolManager.Instance.DeSpawnObject(item.ItemCellView.gameObject);
+                item.ItemCellView = null;
+            }
+            else
+            {
+                item.QuantityAvaiableInCurrentTradeType = itemBought.RemainingQuantity;
+                item.ItemCellView.SetQuantity(itemBought.RemainingQuantity);
+            }
         }
 
         public void ClearItemsListContainer()
         {
             // get list of all current items list and remove from their parent
-            foreach (ItemDetail item in shopModel.CurrentItemsList)
+
+            foreach (KeyValuePair<string, ItemDetail> pair in shopModel.ItemsExistInShop)
             {
-                item.ItemCellView.UnParentChild();
-                ObjectPoolManager.Instance.DeSpawnObject(item.ItemCellView.gameObject);
-                item.ItemCellView = null;
+                pair.Value.ItemCellView.UnParentThisObject();
+                ObjectPoolManager.Instance.DeSpawnObject(pair.Value.ItemCellView.gameObject);
+                pair.Value.ItemCellView = null;
             }
+
         }
 
         public void SetupShop(List<ItemTypesScriptableObjects> itemsList)
         {
-            List<ItemDetail> currentShopItemsList = new List<ItemDetail>();
+            Dictionary<string, ItemDetail> dictionary = new Dictionary<string, ItemDetail>();
 
             foreach (ItemTypesScriptableObjects itemsType in itemsList)
             {
@@ -73,29 +90,32 @@ namespace Assets.Scripts.Controllers
                         QuantityAvaiableInCurrentTradeType = item.TotalQuantity,
                     };
 
-                    currentShopItemsList.Add(itemDetail);
+                    dictionary.Add(item.ID, itemDetail);
                 }
             }
-            shopModel.SetCurrentItemsList(currentShopItemsList);
+
+            shopModel.SetItemsInShop(dictionary);
             SetItemsListFromShop();
         }
 
         private void SetItemsListFromShop()
         {
             // use shop model to get list
-            foreach(ItemDetail item in shopModel.CurrentItemsList)
+
+            foreach (KeyValuePair<string, ItemDetail> pair in shopModel.ItemsExistInShop)
             {
                 ItemCellView itemCellView = ObjectPoolManager.Instance.SpawnObject<ItemCellView>(itemCellViewPrefab);
-                item.ItemCellView = itemCellView;
-                itemCellView.SetProperties(item.QuantityAvaiableInCurrentTradeType, item.ItemData.Icon);
+                pair.Value.ItemCellView = itemCellView;
+                itemCellView.SetImageIcon(pair.Value.ItemData.Icon);
+                itemCellView.SetQuantity(pair.Value.QuantityAvaiableInCurrentTradeType);
                 shopPanelView.AddItem(itemCellView);
 
-                itemCellView.OnClickAddListener(()=> {
+                itemCellView.OnClickAddListener(() => {
                     // fire event and send item detail
-                    Debug.Log("item detail "+item.ItemData.name);
-                    EventService.Instance.OnClickItemFromList.InvokeEvent(item, TradeType.Buy);
+                    EventService.Instance.OnClickItemFromList.InvokeEvent(pair.Value, TradeType.Buy);
                 });
             }
+
         }
     }
 }

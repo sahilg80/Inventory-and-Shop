@@ -25,16 +25,17 @@ namespace Assets.Scripts.Services
         public EventController OnSelectInventory { get; private set; }
         public EventController OnSelectShop { get; private set; }
         public EventController<ItemDetail, TradeType> OnClickItemFromList { get; private set; }
-        public EventController<ItemDetail, TradeType> OnBuySelectedItem { get; private set; }
-        public EventController<ItemDetail, TradeType> OnSoldSelectedItem { get; private set; }
-
+        public EventController<TradeDetail> OnBuySelectedItem { get; private set; }
+        public EventController<TradeDetail> OnSoldSelectedItem { get; private set; }
+        public EventController<string> OnShowTradeStatus { get; private set; }
         private EventService()
         {
             OnSelectInventory = new EventController();
             OnSelectShop = new EventController();
             OnClickItemFromList = new EventController<ItemDetail, TradeType>();
-            OnBuySelectedItem = new EventController<ItemDetail, TradeType>();
-            OnSoldSelectedItem = new EventController<ItemDetail, TradeType>();
+            OnBuySelectedItem = new EventController<TradeDetail>();
+            OnSoldSelectedItem = new EventController<TradeDetail>();
+            OnShowTradeStatus = new EventController<string>();
         }
     }
 }

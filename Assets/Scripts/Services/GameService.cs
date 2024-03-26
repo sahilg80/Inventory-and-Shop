@@ -27,6 +27,7 @@ namespace Assets.Scripts.Services
 
         private PlayerInventoryController inventoryController;
         private ShopController shopController;
+        private PlayerController playerController;
 
         public TradeType CurrentTradeType { get; private set; }
 
@@ -40,7 +41,7 @@ namespace Assets.Scripts.Services
 
         private void Start()
         {
-            PlayerController player = new PlayerController(playerSO, playerView);
+            playerController = new PlayerController(playerSO, playerView);
             inventoryController = new PlayerInventoryController(playerInventoryView);
             shopController = new ShopController(shopPanelView, itemCellView);
             SetupShop();
@@ -67,6 +68,11 @@ namespace Assets.Scripts.Services
             {
                 shopController.ClearItemsListContainer();
             }
+        }
+
+        public PlayerController GetPlayerController()
+        {
+            return playerController;
         }
     }
 }

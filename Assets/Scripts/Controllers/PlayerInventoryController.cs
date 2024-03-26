@@ -19,15 +19,15 @@ namespace Assets.Scripts.Controllers
             this.playerInventoryView = playerInventoryView;
             this.playerInventoryView.SetController(this);
             this.playerInventoryModel = new PlayerInventoryModel(this);
-            EventService.Instance.OnSelectInventory.AddListener(OnSelectInventory);
+            EventService.Instance.OnSelectInventory.AddListener(OnSelectInventoryPanel);
         }
 
         ~PlayerInventoryController()
         {
-            EventService.Instance.OnSelectInventory.RemoveListener(OnSelectInventory);
+            EventService.Instance.OnSelectInventory.RemoveListener(OnSelectInventoryPanel);
         }
 
-        private void OnSelectInventory()
+        private void OnSelectInventoryPanel()
         {
             GameService.Instance.ClearItemsFromPreviousTradeType();
             GameService.Instance.ChangeTradeType(Utilities.TradeType.Sell);

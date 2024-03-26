@@ -12,7 +12,6 @@ namespace Assets.Scripts.Views
         [SerializeField]
         private TextMeshProUGUI playerInventoryWeight;
         private float maximumWeight;
-        private const float initialWeight = 0f;
 
 
         private void Start()
@@ -20,11 +19,15 @@ namespace Assets.Scripts.Views
             
         }
 
-        public void SetInitialPlayerData(float money, float weight)
+        public void SetMaximumWeight(float weight)
         {
             maximumWeight = weight;
+        }
+
+        public void UpdatePlayerData(float money, float weight)
+        {
             SetPlayerMoney(money);
-            SetPlayerTradingWeight(initialWeight);
+            SetPlayerTradingWeight(weight);
         }
 
         private void SetPlayerMoney(float money)

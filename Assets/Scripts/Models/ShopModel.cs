@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Controllers;
 using Assets.Scripts.ScriptableObjects;
+using Assets.Scripts.Utilities;
 using Assets.Scripts.Views;
 using System;
 using System.Collections.Generic;
@@ -13,15 +14,28 @@ namespace Assets.Scripts.Models
     public class ShopModel
     {
         private ShopController shopController;
-        public List<ItemDetail> CurrentItemsList { get; private set; }
+        public Dictionary<string, ItemDetail> ItemsExistInShop { get; private set; }
+        //public List<ItemDetail> CurrentItemsList { get; private set; }
         public ShopModel(ShopController shopController)
         {
             this.shopController = shopController;
         }
 
-        public void SetCurrentItemsList(List<ItemDetail> list)
+        //public void SetCurrentItemsList(List<ItemDetail> list)
+        //{
+        //    CurrentItemsList = list;
+        //}
+
+        public void SetItemsInShop(Dictionary<string, ItemDetail> list)
         {
-            CurrentItemsList = list;
+            ItemsExistInShop = list;
+        }
+
+        public ItemDetail GetItemFromShopByID(string id)
+        {
+            ItemDetail foundItem;
+            ItemsExistInShop.TryGetValue(id, out foundItem);
+            return foundItem;
         }
     }
 
@@ -30,5 +44,14 @@ namespace Assets.Scripts.Models
         public ItemScriptableObject ItemData;
         public int QuantityAvaiableInCurrentTradeType;
         public ItemCellView ItemCellView;
+    }
+
+    public class TradeDetail
+    {
+        public ItemScriptableObject ItemData;
+        public float QuantityTraded;
+        public float TradedAmount;
+        public float TradedWeight;
+        public int RemainingQuantity;
     }
 }

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c82958ab53c303042a3e171d252bdf6d, type: 3}
   m_Name: Apple
   m_EditorClassIdentifier: 
+  ID: 0c13ac7e-c17c-4258-99d9-26063bc5f314
   Name: Apple
   Description: It is a fruit
   Icon: {fileID: 21300000, guid: b4b40e761bb124b4584595696b6fc98c, type: 3}

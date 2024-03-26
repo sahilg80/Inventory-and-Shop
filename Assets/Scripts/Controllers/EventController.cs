@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Controllers
 {
-    public class EventController<T, U, V>
+    public class EventController<T>
     {
-        private event Action<T, U, V> BaseAction;
+        private event Action<T> BaseAction;
 
-        public void AddListener(Action<T, U, V> listener)
+        public void AddListener(Action<T> listener)
         {
             BaseAction += listener;
         }
 
-        public void RemoveListener(Action<T, U, V> listener)
+        public void RemoveListener(Action<T> listener)
         {
             BaseAction -= listener;
         }
 
-        public void InvokeEvent(T typeT, U typeU, V typeV)
-        {
-            BaseAction?.Invoke(typeT, typeU, typeV);
+        public void InvokeEvent(T type)
+        { 
+            BaseAction?.Invoke(type);
         }
     }
 
