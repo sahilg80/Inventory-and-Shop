@@ -29,13 +29,19 @@ namespace Assets.Scripts.Views
             onClickItemButton.onClick.AddListener(action);
         }
 
-        public void SetProperties(int quantity, Sprite sprite)
+        public void SetImageIcon(Sprite sprite)
         {
             itemIcon.sprite = sprite;
-            quantityText.SetText(quantity.ToString());
         }
 
-        public void UnParentChild()
+        public void SetQuantity(int quantity)
+        {
+            quantityText.SetText(quantity.ToString());
+
+            // add handling if quantity reacehs to zero
+        }
+
+        public void UnParentThisObject()
         {
             this.transform.parent = null;
         }

@@ -9,8 +9,8 @@ namespace Assets.Scripts.Models
 {
     public class PlayerModel
     {
-        public float CurrentOccupiedMoney;
-        public float CurrentOccupiedWeight;
+        public float CurrentOccupiedMoney { get; private set; }
+        public float CurrentOccupiedWeight { get; private set; }
         public float MaximumWeight { get; private set; }
         public float InitialOccupiedAmount { get; private set; }
 
@@ -18,6 +18,18 @@ namespace Assets.Scripts.Models
         {
             InitialOccupiedAmount = playerSO.InitialAmout;
             MaximumWeight = playerSO.MaximumWeight;
+            CurrentOccupiedMoney = InitialOccupiedAmount;
+            CurrentOccupiedWeight = 0f;
+        }
+
+        public void UpdateOccupiedMoney(float value)
+        {
+            CurrentOccupiedMoney = value;
+        }
+
+        public void UpdateOccupiedWeight(float value)
+        {
+            CurrentOccupiedWeight = value;
         }
     }
 }

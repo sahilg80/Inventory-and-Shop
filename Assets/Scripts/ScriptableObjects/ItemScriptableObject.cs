@@ -2,6 +2,7 @@ using Assets.Scripts.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 
 namespace Assets.Scripts.ScriptableObjects
@@ -10,6 +11,7 @@ namespace Assets.Scripts.ScriptableObjects
     public class ItemScriptableObject : ScriptableObject
     {
         // Define properties for the ScriptableObject
+        public string ID;
         public string Name;
         public string Description;
         public Sprite Icon;
@@ -19,5 +21,10 @@ namespace Assets.Scripts.ScriptableObjects
         public float Weight;
         public int TotalQuantity;
         public RarityType Rarity;
+
+        private void OnEnable()
+        {
+            ID = Guid.NewGuid().ToString();
+        }
     }
 }
