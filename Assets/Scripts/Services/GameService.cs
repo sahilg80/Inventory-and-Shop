@@ -42,13 +42,14 @@ namespace Assets.Scripts.Services
         private void Start()
         {
             playerController = new PlayerController(playerSO, playerView);
-            inventoryController = new PlayerInventoryController(playerInventoryView);
+            inventoryController = new PlayerInventoryController(playerInventoryView, itemCellView);
             shopController = new ShopController(shopPanelView, itemCellView);
             SetupShop();
         }
 
         public void SetupShop()
         {
+            ChangeTradeType(TradeType.Buy);
             shopController.SetupShop(itemsList);
             //EventService.Instance.OnSelectShop.InvokeEvent();
         }
@@ -60,13 +61,14 @@ namespace Assets.Scripts.Services
 
         public void ClearItemsFromPreviousTradeType()
         {
-            if(CurrentTradeType == TradeType.Buy)
+            Debug.Log("select shop panel "+CurrentTradeType);
+            if (CurrentTradeType == TradeType.Buy)
             {
-                inventoryController.ClearItemsListContainer();
+                shopController.ClearItemsListContainer();
             }
             else if (CurrentTradeType == TradeType.Sell)
             {
-                shopController.ClearItemsListContainer();
+                inventoryController.ClearItemsListContainer();
             }
         }
 

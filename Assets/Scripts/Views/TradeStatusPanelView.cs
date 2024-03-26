@@ -15,7 +15,8 @@ namespace Assets.Scripts.Views
         private GameObject tradeStatusPanel;
         [SerializeField]
         private TextMeshProUGUI itemDetailText;
-        private const float ShowPanelDuration = 2f;
+
+        private const float ShowPanelDuration = 1.2f;
         private WaitForSeconds delay;
         private const string SoldText = "You sold";
         private const string BuyText = "You gained";

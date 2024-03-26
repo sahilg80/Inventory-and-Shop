@@ -29,6 +29,11 @@ namespace Assets.Scripts.Views
             onClickItemButton.onClick.AddListener(action);
         }
 
+        public void RemoveListener()
+        {
+            onClickItemButton.onClick.RemoveAllListeners();
+        }
+
         public void SetImageIcon(Sprite sprite)
         {
             itemIcon.sprite = sprite;

@@ -15,21 +15,17 @@ namespace Assets.Scripts.Models
     {
         private ShopController shopController;
         public Dictionary<string, ItemDetail> ItemsExistInShop { get; private set; }
-        //public List<ItemDetail> CurrentItemsList { get; private set; }
+
         public ShopModel(ShopController shopController)
         {
             this.shopController = shopController;
+            ItemsExistInShop = new Dictionary<string, ItemDetail>();
         }
 
-        //public void SetCurrentItemsList(List<ItemDetail> list)
+        //public void SetItemsInShop(Dictionary<string, ItemDetail> list)
         //{
-        //    CurrentItemsList = list;
+        //    ItemsExistInShop = list;
         //}
-
-        public void SetItemsInShop(Dictionary<string, ItemDetail> list)
-        {
-            ItemsExistInShop = list;
-        }
 
         public ItemDetail GetItemFromShopByID(string id)
         {
@@ -37,6 +33,22 @@ namespace Assets.Scripts.Models
             ItemsExistInShop.TryGetValue(id, out foundItem);
             return foundItem;
         }
+
+        public void AddItemInShop(ItemDetail detail, string id)
+        {
+            ItemsExistInShop.Add(id, detail);
+        }
+
+        public void UpdateItemInShop(ItemDetail detail, string id)
+        {
+            ItemsExistInShop[id] = detail;
+        }
+
+        public void RemoveItemFromShop(string id)
+        {
+            ItemsExistInShop.Remove(id);
+        }
+
     }
 
     public class ItemDetail
@@ -44,12 +56,16 @@ namespace Assets.Scripts.Models
         public ItemScriptableObject ItemData;
         public int QuantityAvaiableInCurrentTradeType;
         public ItemCellView ItemCellView;
+        public ItemDetail()
+        {
+
+        }
     }
 
     public class TradeDetail
     {
         public ItemScriptableObject ItemData;
-        public float QuantityTraded;
+        public int QuantityTraded;
         public float TradedAmount;
         public float TradedWeight;
         public int RemainingQuantity;

@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78b66e56ec786fb40ba1617e51d722f3, type: 3}
-  m_Name: PlayerSO
+  m_Script: {fileID: 11500000, guid: 30e92f028cc729644879c35f059c0f39, type: 3}
+  m_Name: AllTypeItems
   m_EditorClassIdentifier: 
-  MaximumWeight: 100
-  InitialAmout: 1100
+  Type: 4
+  ItemsList: []

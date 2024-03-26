@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Assets.Scripts.ScriptableObjects;
+using Assets.Scripts.Services;
 
 namespace Assets.Scripts.Views
 {
@@ -14,21 +15,9 @@ namespace Assets.Scripts.Views
 
         }
 
-        // call on invoking event
-        //private void UpdatePlayerMoneyText(float money)
-        //{
-        //    playerMoneyText.SetText(money.ToString());
-        //}
-
-        //// call on invoking event
-        //private void UpdatePlayerWeight(float weight)
-        //{
-        //    playerInventoryWeight.SetText(weight.ToString() + "/" + maximumWeight.ToString());
-        //}
-
         public void OnSelectItemType(ItemTypesScriptableObjects itemTypeSO)
         {
-
+            EventService.Instance.OnSelectGivenCategory.InvokeEvent(itemTypeSO.Type);
         }
     }
 }
