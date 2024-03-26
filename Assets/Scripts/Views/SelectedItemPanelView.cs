@@ -4,6 +4,9 @@ using UnityEngine;
 using TMPro;
 using Assets.Scripts.Utilities;
 using UnityEngine.UI;
+using Assets.Scripts.Services;
+using Assets.Scripts.Models;
+using Assets.Scripts.ScriptableObjects;
 
 namespace Assets.Scripts.Views
 {
@@ -33,46 +36,54 @@ namespace Assets.Scripts.Views
         private GameObject sellItemButton;
 
         private int currentSelectedQuantity;
+        private int remainingQuanity;
+        private ItemDetail selectedItemDetails;
+
+        private void OnEnable()
+        {
+            EventService.Instance.OnClickItemFromList.AddListener(OnSelectItem);
+        }
 
         private void Start()
         {
-            ShowThisPanel(false);
+            ShowSelectedItemDetailPanel(false);
         }
 
-        public void SetItemIcon(Sprite sprite)
-        {
-            itemIcon.sprite = sprite;
-        }
 
-        public void SetItemName(string name)
-        {
-            itemNameText.SetText(name);
-        }
+        //public void SetItemIcon(Sprite sprite)
+        //{
+        //    itemIcon.sprite = sprite;
+        //}
 
-        public void SetItemType(ItemType type)
-        {
-            itemTypeText.SetText(type.ToString());
-        }
+        //public void SetItemName(string name)
+        //{
+        //    itemNameText.SetText(name);
+        //}
 
-        public void SetItemDescription(string description)
-        {
-            itemDescriptionText.SetText(description);
-        }
+        //public void SetItemType(ItemType type)
+        //{
+        //    itemTypeText.SetText(type.ToString());
+        //}
 
-        public void SetRarityType(RarityType type)
-        {
-            itemRarityTypeText.SetText(type.ToString());
-        }
+        //public void SetItemDescription(string description)
+        //{
+        //    itemDescriptionText.SetText(description);
+        //}
 
-        public void SetPrice(float price)
-        {
-            itemPriceText.SetText(price.ToString());
-        }
+        //public void SetRarityType(RarityType type)
+        //{
+        //    itemRarityTypeText.SetText(type.ToString());
+        //}
 
-        public void SetWeight(float weight)
-        {
-            itemWeightText.SetText(weight.ToString());
-        }
+        //public void SetPrice(float price)
+        //{
+        //    itemPriceText.SetText(price.ToString());
+        //}
+
+        //public void SetWeight(float weight)
+        //{
+        //    itemWeightText.SetText(weight.ToString());
+        //}
 
         public void SetQuantity(int quantity)
         {
@@ -82,26 +93,78 @@ namespace Assets.Scripts.Views
 
         public void OnClickIncreaseQuantity()
         {
-            SetQuantity(currentSelectedQuantity++);
+            if (remainingQuanity <= currentSelectedQuantity) return;
+
+            currentSelectedQuantity = currentSelectedQuantity + 1;
+            SetQuantity(currentSelectedQuantity);
         }
 
         public void OnClickDecreaseQuantity()
         {
-            SetQuantity(currentSelectedQuantity--);
+            if (currentSelectedQuantity == 0) return;
+
+            currentSelectedQuantity = currentSelectedQuantity - 1;
+            SetQuantity(currentSelectedQuantity);
         }
 
         public void OnClickBuyButton()
         {
-            Debug.Log("buy this item ");
+            ItemDetail itemBoughtDetail = new ItemDetail()
+            {
+                ItemData = selectedItemDetails.ItemData,
+                QuantityAvaiableInCurrentTradeType = currentSelectedQuantity,
+            };
+            
+            selectedItemDetails.QuantityAvaiableInCurrentTradeType = selectedItemDetails.QuantityAvaiableInCurrentTradeType - currentSelectedQuantity;
+
+            EventService.Instance.OnBuySelectedItem.InvokeEvent(itemBoughtDetail, TradeType.Buy);
         }
 
         public void OnClickSellButton()
         {
             Debug.Log("sell this item ");
+            ItemDetail itemSoldDetail = new ItemDetail()
+            {
+                ItemData = selectedItemDetails.ItemData,
+                QuantityAvaiableInCurrentTradeType = currentSelectedQuantity,
+            };
+
+            selectedItemDetails.QuantityAvaiableInCurrentTradeType = selectedItemDetails.QuantityAvaiableInCurrentTradeType - currentSelectedQuantity;
+
+            EventService.Instance.OnSoldSelectedItem.InvokeEvent(selectedItemDetails, TradeType.Sell);
+        }
+
+        private void OnSelectItem(ItemDetail item, TradeType type)
+        {
+            selectedItemDetails = item;
+            SetParameters(item.ItemData, item.QuantityAvaiableInCurrentTradeType, type);
+            ShowSelectedItemDetailPanel(true);
+        }
+
+        private void SetParameters(ItemScriptableObject itemSO, int quanity, TradeType type)
+        {
+            itemIcon.sprite = itemSO.Icon;
+            itemNameText.SetText(itemSO.Name);
+            itemTypeText.SetText(itemSO.Type.ToString());
+            itemDescriptionText.SetText(itemSO.Description);
+            itemRarityTypeText.SetText(itemSO.Rarity.ToString());
+            itemWeightText.SetText(itemSO.Weight.ToString());
+            if (type == TradeType.Buy)
+            {
+                itemPriceText.SetText(itemSO.BuyPrice.ToString());
+                EnableSellButton(false);
+            }
+            else
+            {
+                itemPriceText.SetText(itemSO.SellPrice.ToString());
+                EnableSellButton(true);
+            }
+            remainingQuanity = quanity;
+            SetQuantity(quanity);
         }
 
         // call on invoking event
-        private void ShowThisPanel(bool value)
+        private void ShowSelectedItemDetailPanel(bool value)
         {
             selectedItemPanel.SetActive(value);
         }
@@ -111,6 +174,11 @@ namespace Assets.Scripts.Views
         {
             buyItemButton.SetActive(!value);
             sellItemButton.SetActive(value);
+        }
+
+        private void OnDisable()
+        {
+            EventService.Instance.OnClickItemFromList.RemoveListener(OnSelectItem);
         }
 
     }

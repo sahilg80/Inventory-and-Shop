@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Assets.Scripts.Models;
+using System;
+using UnityEngine.Events;
 
 namespace Assets.Scripts.Views
 {
@@ -12,11 +15,18 @@ namespace Assets.Scripts.Views
         private Image itemIcon;
         [SerializeField]
         private TextMeshProUGUI quantityText;
+        [SerializeField]
+        private Button onClickItemButton;
 
         // Start is called before the first frame update
         private void OnEnable()
         {
 
+        }
+
+        public void OnClickAddListener(UnityAction action)
+        {
+            onClickItemButton.onClick.AddListener(action);
         }
 
         public void SetProperties(int quantity, Sprite sprite)
@@ -25,9 +35,14 @@ namespace Assets.Scripts.Views
             quantityText.SetText(quantity.ToString());
         }
 
-        private void OnDisable()
+        public void UnParentChild()
         {
             this.transform.parent = null;
+        }
+
+        private void OnDisable()
+        {
+
         }
     }
 }

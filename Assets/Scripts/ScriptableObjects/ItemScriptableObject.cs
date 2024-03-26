@@ -17,6 +17,7 @@ namespace Assets.Scripts.ScriptableObjects
         public float SellPrice;
         public ItemType Type;
         public float Weight;
+        public int TotalQuantity;
         public RarityType Rarity;
     }
 }
