@@ -6,3 +6,5 @@ For data management and configuration, you've utilized Scriptable Objects, which
 In the game, players start with an empty inventory and a set amount of currency to engage in trading activities. They can buy and sell items from the market shop list, with transactions affecting their inventory and currency balance. A maximum inventory weight constraint limits the number of items players can carry, adding a strategic element to inventory management.
 
 Overall, your game provides players with the challenge of managing their inventory, making strategic decisions in trading, and optimizing their resources to maximize profit within the constraints of inventory weight and available funds.
+
+Gameplay video link - https://drive.google.com/file/d/17mX-gBYulE5Vyav3PLRM8P0a39XIiLFg/view
