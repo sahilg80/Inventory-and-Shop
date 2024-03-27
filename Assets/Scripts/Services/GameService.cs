@@ -17,13 +17,17 @@ namespace Assets.Scripts.Services
         [SerializeField]
         private ShopPanelView shopPanelView;
         [SerializeField]
-        private List<ItemTypesScriptableObjects> itemsList;
-        [SerializeField]
         private ItemCellView itemCellView;
         [SerializeField]
         private PlayerView playerView;
         [SerializeField]
+        private SoundView soundView;
+        [SerializeField]
+        private SelectedItemPanelView selectedItemPanelView;
+        [SerializeField]
         private PlayerScriptableObject playerSO;
+        [SerializeField]
+        private List<ItemTypesScriptableObjects> itemsList;
 
         private PlayerInventoryController inventoryController;
         private ShopController shopController;
@@ -76,5 +80,16 @@ namespace Assets.Scripts.Services
         {
             return playerController;
         }
+
+        public SoundView GetSoundView()
+        {
+            return soundView;
+        }
+
+        public SelectedItemPanelView GetSelectedItemPanel()
+        {
+            return selectedItemPanelView;
+        }
+
     }
 }

@@ -14,16 +14,18 @@ namespace Assets.Scripts.Views
 
         public void OnClickInventory()
         {
-            Debug.Log("click inventory "+ GameService.Instance.CurrentTradeType);
+            GameService.Instance.GetSoundView().PlaySoundEffects(Utilities.SoundType.OnClick);
             if (GameService.Instance.CurrentTradeType == Utilities.TradeType.Sell) return;
             EventService.Instance.OnSelectInventory.InvokeEvent();
+            GameService.Instance.GetSelectedItemPanel().ShowSelectedItemDetailPanel(false);
         }
 
         public void OnClickShop()
         {
-            Debug.Log("click shop "+ GameService.Instance.CurrentTradeType);
+            GameService.Instance.GetSoundView().PlaySoundEffects(Utilities.SoundType.OnClick);
             if (GameService.Instance.CurrentTradeType == Utilities.TradeType.Buy) return;
             EventService.Instance.OnSelectShop.InvokeEvent();
+            GameService.Instance.GetSelectedItemPanel().ShowSelectedItemDetailPanel(false);
         }
     }
 }

@@ -17,7 +17,9 @@ namespace Assets.Scripts.Views
 
         public void OnSelectItemType(ItemTypesScriptableObjects itemTypeSO)
         {
+            GameService.Instance.GetSoundView().PlaySoundEffects(Utilities.SoundType.OnClick);
             EventService.Instance.OnSelectGivenCategory.InvokeEvent(itemTypeSO.Type);
+            GameService.Instance.GetSelectedItemPanel().ShowSelectedItemDetailPanel(false);
         }
     }
 }

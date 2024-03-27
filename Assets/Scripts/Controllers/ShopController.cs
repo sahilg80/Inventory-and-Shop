@@ -38,6 +38,40 @@ namespace Assets.Scripts.Controllers
             EventService.Instance.OnSelectGivenCategory.RemoveListener(OnSelectCategory);
         }
 
+        public void ClearItemsListContainer()
+        {
+            // get list of all current items list and remove from their parent
+
+            foreach (KeyValuePair<string, ItemDetail> pair in shopModel.ItemsExistInShop)
+            {
+                if (pair.Value.ItemCellView != null)
+                {
+                    pair.Value.ItemCellView.RemoveListener();
+                    ObjectPoolManager.Instance.DeSpawnObject(pair.Value.ItemCellView.gameObject);
+                    pair.Value.ItemCellView = null;
+                }
+            }
+        }
+
+        public void SetupShop(List<ItemTypesScriptableObjects> itemsList)
+        {
+
+            foreach (ItemTypesScriptableObjects itemsType in itemsList)
+            {
+                foreach (ItemScriptableObject item in itemsType.ItemsList)
+                {
+                    ItemDetail itemDetail = new ItemDetail()
+                    {
+                        ItemData = item,
+                        QuantityAvaiableInCurrentTradeType = item.TotalQuantity,
+                    };
+                    shopModel.AddItemInShop(itemDetail, item.ID);
+                }
+            }
+
+            SetItemsListFromShop();
+        }
+
         private void OnSelectCategory(ItemType type)
         {
             if (GameService.Instance.CurrentTradeType != TradeType.Buy) return;
@@ -66,7 +100,6 @@ namespace Assets.Scripts.Controllers
 
             if (itemBought.RemainingQuantity <= 0)
             {
-                //item.ItemCellView.UnParentThisObject();
                 shopModel.RemoveItemFromShop(item.ItemData.ID);
                 item.ItemCellView.RemoveListener();
                 ObjectPoolManager.Instance.DeSpawnObject(item.ItemCellView.gameObject);
@@ -99,40 +132,6 @@ namespace Assets.Scripts.Controllers
             }
         }
 
-        public void ClearItemsListContainer()
-        {
-            // get list of all current items list and remove from their parent
-
-            foreach (KeyValuePair<string, ItemDetail> pair in shopModel.ItemsExistInShop)
-            {
-                if (pair.Value.ItemCellView != null)
-                {
-                    pair.Value.ItemCellView.RemoveListener();
-                    ObjectPoolManager.Instance.DeSpawnObject(pair.Value.ItemCellView.gameObject);
-                    pair.Value.ItemCellView = null;
-                }
-            }
-        }
-
-        public void SetupShop(List<ItemTypesScriptableObjects> itemsList)
-        {
-
-            foreach (ItemTypesScriptableObjects itemsType in itemsList)
-            {
-                foreach(ItemScriptableObject item in itemsType.ItemsList)
-                {
-                    ItemDetail itemDetail = new ItemDetail()
-                    {
-                        ItemData = item,
-                        QuantityAvaiableInCurrentTradeType = item.TotalQuantity,
-                    };
-                    shopModel.AddItemInShop(itemDetail, item.ID);
-                }
-            }
-
-            SetItemsListFromShop();
-        }
-
         private void SetItemsListFromShop()
         {
             // use shop model to get list
@@ -147,6 +146,7 @@ namespace Assets.Scripts.Controllers
 
                 itemCellView.OnClickAddListener(() => {
                     // fire event and send item detail
+                    GameService.Instance.GetSoundView().PlaySoundEffects(SoundType.OnClick);
                     EventService.Instance.OnClickItemFromList.InvokeEvent(pair.Value, TradeType.Buy);
                 });
             }
