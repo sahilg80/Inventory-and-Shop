@@ -28,4 +28,13 @@ namespace Assets.Scripts.Utilities
         Buy,
         Sell
     }
+
+    public enum SoundType
+    {
+        OnClick,
+        ConfirmYes,
+        ConfirmNo,
+        BackgroundMusic
+    }
+
 }

@@ -146,6 +146,7 @@ namespace Assets.Scripts.Controllers
 
                 itemCellView.OnClickAddListener(() => {
                     // fire event and send item detail
+                    GameService.Instance.GetSoundView().PlaySoundEffects(SoundType.OnClick);
                     EventService.Instance.OnClickItemFromList.InvokeEvent(pair.Value, TradeType.Buy);
                 });
             }

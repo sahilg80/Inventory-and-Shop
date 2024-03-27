@@ -22,12 +22,14 @@ namespace Assets.Scripts.Views
 
         public void OnClickYesButton()
         {
+            GameService.Instance.GetSoundView().PlaySoundEffects(Utilities.SoundType.ConfirmYes);
             actionToExecuteOnConfirmYes?.Invoke();
             confirmationPanel.SetActive(false);
         }
 
         public void OnClickNoButton()
         {
+            GameService.Instance.GetSoundView().PlaySoundEffects(Utilities.SoundType.ConfirmNo);
             actionToExecuteOnConfirmYes = null;
             confirmationPanel.SetActive(false);
         }

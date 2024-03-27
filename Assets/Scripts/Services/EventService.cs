@@ -30,7 +30,6 @@ namespace Assets.Scripts.Services
         public EventController<string> OnShowTradeStatus { get; private set; }
         public EventController<ItemType> OnSelectGivenCategory { get; private set; }
         public EventController<Action> OnTradeSelectedItem { get; private set; }
-
         private EventService()
         {
             OnSelectInventory = new EventController();

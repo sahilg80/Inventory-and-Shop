@@ -53,6 +53,7 @@ namespace Assets.Scripts.Views
 
         public void OnClickIncreaseQuantity()
         {
+            GameService.Instance.GetSoundView().PlaySoundEffects(SoundType.OnClick);
             if (remainingQuanity <= currentSelectedQuantity) return;
 
             currentSelectedQuantity = currentSelectedQuantity + 1;
@@ -61,6 +62,7 @@ namespace Assets.Scripts.Views
 
         public void OnClickDecreaseQuantity()
         {
+            GameService.Instance.GetSoundView().PlaySoundEffects(SoundType.OnClick);
             if (currentSelectedQuantity == 0) return;
 
             currentSelectedQuantity = currentSelectedQuantity - 1;
@@ -69,6 +71,7 @@ namespace Assets.Scripts.Views
 
         public void OnClickBuyButton()
         {
+            GameService.Instance.GetSoundView().PlaySoundEffects(SoundType.OnClick);
             bool isValid = IsThisTradeValid(selectedItemDetails.ItemData.Weight, selectedItemDetails.ItemData.BuyPrice);
             if (!isValid) return;
 
@@ -77,6 +80,9 @@ namespace Assets.Scripts.Views
 
         public void OnClickSellButton()
         {
+            GameService.Instance.GetSoundView().PlaySoundEffects(SoundType.OnClick);
+            if (currentSelectedQuantity <= 0) return;
+
             EventService.Instance.OnTradeSelectedItem.InvokeEvent(SellValidItem);
         }
 
@@ -84,6 +90,12 @@ namespace Assets.Scripts.Views
         {
             currentSelectedQuantity = quantity;
             itemQuantityText.SetText(quantity.ToString());
+        }
+
+        // call on invoking event
+        public void ShowSelectedItemDetailPanel(bool value)
+        {
+            selectedItemPanel.SetActive(value);
         }
 
         private void BuyValidItem()
@@ -171,11 +183,6 @@ namespace Assets.Scripts.Views
             SetQuantity(quantity);
         }
 
-        // call on invoking event
-        private void ShowSelectedItemDetailPanel(bool value)
-        {
-            selectedItemPanel.SetActive(value);
-        }
 
         // call on invoking event
         private void EnableSellButton(bool value)
